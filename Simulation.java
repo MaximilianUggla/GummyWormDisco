@@ -46,16 +46,8 @@ B R R B B
         width = Integer.parseInt(widthAndHeight[0]);
         height = Integer.parseInt(widthAndHeight[1]);
         spotlights = Integer.parseInt(spotlightsAndbeats[0]);
-        beats = Arrays.copyOfRange(spotlightsAndbeats, 1, spotlightsAndbeats.length-1);
+        beats = Arrays.copyOfRange(spotlightsAndbeats, 1, spotlightsAndbeats.length);
         nbrOfWorms = Integer.parseInt(information.get(2)[0]);
-
-        System.out.println(width);
-        System.out.println(height);
-        System.out.println(spotlights);
-        for (String beat : beats) {              // beats is not correctly created
-            System.out.println(beat);
-        }
-        System.out.println(nbrOfWorms);
 
         String[][] board = new String[height][];
         for (int i = 3; i < height+3; i++) {
@@ -65,17 +57,6 @@ B R R B B
         Worm[] worms = new Worm[nbrOfWorms];
         for (int i = height+3; i < nbrOfWorms+height+3; i++) {
             worms[i-height-3] = new Worm(information.get(i));
-        }
-        
-        for (String[] strArray : board) {
-            for (String str : strArray) {
-                System.out.print(str);
-            }
-            System.out.println();
-        }
-
-        for (Worm w : worms) {
-            System.out.println(w);
         }
 
     }
