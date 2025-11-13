@@ -59,6 +59,10 @@ B R R B B
             worms[i-height-3] = new Worm(information.get(i));
         }
 
+        for (Worm w : worms) {
+            System.err.println(w);
+        }
+
     }
 
 }
