@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 
 public class InputHandler {
@@ -24,7 +25,8 @@ B R R B B
 
     public static void main(String[] args) throws IOException {
         int width, height, spotlights, nbrOfWorms;
-        String[] beats;
+        HashSet<String> beats;
+
         System.out.println("--- --- --- --- --- --- --- --- --- --- --- --- --- ---");
         System.out.println("Either paste all input lines at once or one at a time,\nthen on the final line press enter twice to run the program:");
         System.out.println("--- --- --- --- --- --- --- --- --- --- --- --- --- ---");
@@ -43,12 +45,13 @@ B R R B B
         }
 
         String[] widthAndHeight = information.get(0);
-        String[] spotlightsAndbeats = information.get(1);
+        List<String> spotlightsAndbeats = Arrays.asList(information.get(1));
         
         width = Integer.parseInt(widthAndHeight[0]);
         height = Integer.parseInt(widthAndHeight[1]);
-        spotlights = Integer.parseInt(spotlightsAndbeats[0]);
-        beats = Arrays.copyOfRange(spotlightsAndbeats, 1, spotlightsAndbeats.length);
+        spotlights = Integer.parseInt(spotlightsAndbeats.get(0));
+        spotlightsAndbeats.removeFirst();
+        beats = new HashSet<String>(spotlightsAndbeats);
         nbrOfWorms = Integer.parseInt(information.get(2)[0]);
 
         String[][] board = new String[height][];
@@ -60,5 +63,8 @@ B R R B B
         for (int i = height+3; i < nbrOfWorms+height+3; i++) {
             worms[i-height-3] = new Worm(information.get(i));
         }
+
+        DanceSimulator ds = new DanceSimulator(board, worms, beats);
+        ds.start();
     }
 }
