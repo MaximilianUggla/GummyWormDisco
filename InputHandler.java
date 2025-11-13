@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 
@@ -24,17 +23,17 @@ B R R B B
 */    
 
     public static void main(String[] args) throws IOException {
-        int width, height, spotlights, nbrOfWorms;
-        HashSet<String> beats;
+        //int width, spotlights;
+        int height, nbrOfWorms;
+        HashSet<Integer> beats;
 
-        System.out.println("--- --- --- --- --- --- --- --- --- --- --- --- --- ---");
-        System.out.println("Either paste all input lines at once or one at a time,\nthen on the final line press enter twice to run the program:");
-        System.out.println("--- --- --- --- --- --- --- --- --- --- --- --- --- ---");
+        // System.out.println("--- --- --- --- --- --- --- --- --- --- --- --- --- ---");
+        // System.out.println("Either paste all input lines at once or one at a time,\nthen on the final line press enter twice to run the program:");
+        // System.out.println("--- --- --- --- --- --- --- --- --- --- --- --- --- ---");
 
         List<String[]> information = new ArrayList<>();
 
         BufferedReader read = new BufferedReader(new InputStreamReader(System.in));
-        
 
         while (true) {
             String line = read.readLine();
@@ -44,27 +43,35 @@ B R R B B
             information.add(line.split(" "));
         }
 
-        String[] widthAndHeight = information.get(0);
-        List<String> spotlightsAndbeats = Arrays.asList(information.get(1));
-        
-        width = Integer.parseInt(widthAndHeight[0]);
+        String[] widthAndHeight = information.get(0);           ///
+        //width = Integer.parseInt(widthAndHeight[0]);
         height = Integer.parseInt(widthAndHeight[1]);
-        spotlights = Integer.parseInt(spotlightsAndbeats.get(0));
-        spotlightsAndbeats.removeFirst();
-        beats = new HashSet<String>(spotlightsAndbeats);
-        nbrOfWorms = Integer.parseInt(information.get(2)[0]);
 
-        String[][] board = new String[height][];
+
+        List<Integer> temporary = new ArrayList<>();
+        String[] spotlightsAndbeats = information.get(1);
+        //spotlights = Integer.parseInt(spotlightsAndbeats.get(0));
+        for (String str : spotlightsAndbeats) {
+            temporary.add(Integer.parseInt(str));
+        }
+        temporary.removeFirst();
+        Integer lastBeat = temporary.getLast();
+        beats = new HashSet<Integer>(temporary);
+
+
+        nbrOfWorms = Integer.parseInt(information.get(2)[0]);           ///
+
+        String[][] board = new String[height][];                        ///
         for (int i = 3; i < height+3; i++) {
             board[i-3] = information.get(i);
         }
 
-        Worm[] worms = new Worm[nbrOfWorms];
+        Worm[] worms = new Worm[nbrOfWorms];                            ///
         for (int i = height+3; i < nbrOfWorms+height+3; i++) {
             worms[i-height-3] = new Worm(information.get(i));
         }
 
-        DanceSimulator ds = new DanceSimulator(board, worms, beats);
+        DanceSimulator ds = new DanceSimulator(board, worms, beats, lastBeat);
         ds.start();
     }
 }
