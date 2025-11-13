@@ -18,25 +18,18 @@ public class Worm {
         return wormSegments[0];
     }
 
-    public void move(String direction) {
+    public String move(String direction) {
         switch(direction.toLowerCase()) {
-            case "w":
-            case "u":
-                shiftCoordinates(new Coordinate(0, -1));
-                break;
-            case "s":
-            case "dw":
-                shiftCoordinates(new Coordinate(0, 1));
-                break;
             case "a":
             case "l":
                 shiftCoordinates(new Coordinate(-1, 0));
-                break;
+                return "l";
             case "d":
             case "r":
                 shiftCoordinates(new Coordinate(1, 0));
-                break;
+                return "r";
         }
+        return "x";
     }
 
     private void shiftCoordinates(Coordinate dir) {
