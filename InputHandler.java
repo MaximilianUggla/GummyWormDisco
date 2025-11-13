@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Simulation {
+public class InputHandler {
 
 /* 
 5 5
@@ -25,7 +25,9 @@ B R R B B
     public static void main(String[] args) throws IOException {
         int width, height, spotlights, nbrOfWorms;
         String[] beats;
-        System.out.println("Give info (dubble press enter):");
+        System.out.println("--- --- --- --- --- --- --- --- --- --- --- --- --- ---");
+        System.out.println("Either paste all input lines at once or one at a time,\nthen on the final line press enter twice to run the program:");
+        System.out.println("--- --- --- --- --- --- --- --- --- --- --- --- --- ---");
 
         List<String[]> information = new ArrayList<>();
 
