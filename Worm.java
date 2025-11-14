@@ -2,8 +2,9 @@ package GummyWormDisco;
 
 public class Worm {
     private Coordinate[] wormSegments;
+    private final int id;
 
-    public Worm(String[] segments) {
+    public Worm(String[] segments, int i) {
         Coordinate[] wormSegments = new Coordinate[segments.length];
         int index = 0;
         for (String cordinate : segments) {
@@ -12,24 +13,32 @@ public class Worm {
             index += 1;
         }
         this.wormSegments = wormSegments;
+        id = i;
     }
 
     public Coordinate head() {
         return wormSegments[0];
     }
 
+    public String move(Worm[] worms) {
+
+        return "";
+    }
+
     public String move(String direction) {
         switch(direction.toLowerCase()) {
-            case "a":
-            case "l":
+            case "left":
                 shiftCoordinates(new Coordinate(-1, 0));
-                return "l";
-            case "d":
-            case "r":
+                return id + "l";
+            case "right":
                 shiftCoordinates(new Coordinate(1, 0));
-                return "r";
+                return id + "r";
+            default:
+                int newX = head().x() - wormSegments[1].x();
+                int newY = head().y() - wormSegments[1].y();
+                shiftCoordinates(new Coordinate(newX, newY));
+                return "x";
         }
-        return "x";
     }
 
     private void shiftCoordinates(Coordinate dir) {
