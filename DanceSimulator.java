@@ -1,12 +1,13 @@
 package GummyWormDisco;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class DanceSimulator {
     String[][] board;
     Worm[] worms;
     List<Integer> beats;
-    Integer lastBeat;
     
     public DanceSimulator(String[][] board, Worm[] worms, List<Integer> beats) {
         this.board = board;
@@ -15,14 +16,25 @@ public class DanceSimulator {
     }
 
     public void start() {
-        for (int beat = 0; beat < lastBeat; beat++) {
-            if (!beats.contains(beat)) {
-                for (Worm w : worms) {
+        Iterator<Integer> spotlights = beats.iterator();
+        Integer nextStop = spotlights.next();
 
+        for (int i = 0; i < beats.getLast(); i++) {
+            if (i != nextStop) {
+                List<Coordinate> busy = new ArrayList<>();
+                for (Worm w : worms) {
+                    busy.addAll(w.getBodyCoordinates());
+                }
+
+                for (Worm w : worms) {
+                    
                 }
 
                 
-            } else {System.out.println("x");}
+            } else {
+                nextStop = spotlights.next();
+                System.out.println("x");
+            }
         }
     }
 }
