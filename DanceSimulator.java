@@ -1,6 +1,6 @@
 package GummyWormDisco;
 
-import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 
@@ -15,21 +15,28 @@ public class DanceSimulator {
         this.beats = beats;
     }
 
-    public void start() {
+    public void startSim() {
         Iterator<Integer> spotlights = beats.iterator();
         Integer nextStop = spotlights.next();
 
         for (int i = 0; i < beats.getLast(); i++) {
             if (i != nextStop) {
-                List<Coordinate> busy = new ArrayList<>();
+                HashSet<Coordinate> busy = new HashSet<>();
                 for (Worm w : worms) {
                     busy.addAll(w.getBodyCoordinates());
                 }
 
+                Worm[] colisionOrder = new Worm[worms.length];
                 for (Worm w : worms) {
-                    
+                    Coordinate head = w.head();
+                    Coordinate currDir = w.currentDirection();
+                    for (int j = 0; j < worms.length; j++) {
+                        head = head.add(currDir);
+                        if (busy.contains(head)) {
+                            colisionOrder[j] = w;
+                        }
+                    }
                 }
-
                 
             } else {
                 nextStop = spotlights.next();

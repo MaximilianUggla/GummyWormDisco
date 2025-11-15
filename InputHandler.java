@@ -65,6 +65,6 @@ B R R B B
         }
 
         DanceSimulator ds = new DanceSimulator(board, worms, beats);
-        ds.start();
+        ds.startSim();
     }
 }

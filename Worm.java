@@ -1,7 +1,6 @@
 package GummyWormDisco;
 
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
 
 public class Worm {
@@ -28,19 +27,13 @@ public class Worm {
         return Arrays.asList(wormSegments);
     }
 
-    // public String move(HashSet<Coordinate> busy) {
-
-
-    //     return "";
-    // }
-
     public Coordinate currentDirection() {
         int newX = head().x() - wormSegments[1].x();
         int newY = head().y() - wormSegments[1].y();
         return new Coordinate(newX, newY);
     }
 
-    private String move(String direction) {
+    public String move(String direction) {
         switch(direction.toLowerCase()) {
             case "left":
                 shiftCoordinates(new Coordinate(-1, 0));
