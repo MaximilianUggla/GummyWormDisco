@@ -1,5 +1,6 @@
 package GummyWormDisco;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -21,27 +22,37 @@ public class DanceSimulator {
 
         for (int i = 0; i < beats.getLast(); i++) {
             if (i != nextStop) {
-                HashSet<Coordinate> busy = new HashSet<>();
-                for (Worm w : worms) {
-                    busy.addAll(w.getBodyCoordinates());
-                }
+                HashSet<Coordinate> busy = getBusy();
 
-                Worm[] colisionOrder = new Worm[worms.length];
-                for (Worm w : worms) {
-                    Coordinate head = w.head();
-                    Coordinate currDir = w.currentDirection();
-                    for (int j = 0; j < worms.length; j++) {
-                        head = head.add(currDir);
-                        if (busy.contains(head)) {
-                            colisionOrder[j] = w;
-                        }
-                    }
-                }
+                List<Worm> colisionOrder = getColisionOrder(busy);
                 
             } else {
                 nextStop = spotlights.next();
                 System.out.println("x");
             }
         }
+    }
+
+    private HashSet<Coordinate> getBusy() {
+        HashSet<Coordinate> busy = new HashSet<>();
+        for (Worm w : worms) {
+            busy.addAll(w.getBodyCoordinates());
+        }
+        return busy;
+    }
+
+    private List<Worm> getColisionOrder(HashSet<Coordinate> busy) {
+        List<Worm> colisionOrder = new ArrayList<>();
+        for (Worm w : worms) {
+            Coordinate head = w.head();
+            Coordinate currDir = w.currentDirection();
+            for (int j = 0; j < worms.length; j++) {
+                head = head.add(currDir);
+                if (busy.contains(head)) {
+                    colisionOrder.add(j, w);
+                }
+            }
+        }
+        return colisionOrder;
     }
 }
