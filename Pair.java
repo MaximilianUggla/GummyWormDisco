@@ -16,4 +16,9 @@ public class Pair<A, B> {
     public B _2() {
         return secound;
     }
+
+    @Override
+    public String toString() {
+        return "(" + _1() + "," + _2() + ")";
+    }
 }
