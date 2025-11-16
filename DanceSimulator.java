@@ -34,7 +34,6 @@ public class DanceSimulator {
         Worm turned = null;
 
         for (int i = 0; i <= beats.getLast(); i++) {
-            System.out.println(i);
             turned = null;
             if (i != nextStop) {
                 Worm firstToColide = firstToColide();
@@ -54,7 +53,6 @@ public class DanceSimulator {
                     turn(firstToColide);
                 }
 
-                System.out.println(turned);
                 for (Worm w : worms) {
                     if (w != turned) {
                         w.shiftCoordinates(w.currentDirection());
@@ -77,14 +75,11 @@ public class DanceSimulator {
         Queue<Pair<Worm, Integer>> colisionOrder = new PriorityQueue<>((p1, p2) -> p1._2() - p2._2());
 
         for (Worm w : worms) {
-            System.out.println(w);
             Pair<Boolean, Integer> colision = getColision(w, w.currentDirection());
-            System.out.println(colision);
             if (colision._1()) {
                 colisionOrder.offer(new Pair<Worm,Integer>(w, colision._2()));
             }
         }
-        System.out.println(colisionOrder);
         Pair<Worm, Integer> first = colisionOrder.poll();
         if (first != null) {
             return first._1();
