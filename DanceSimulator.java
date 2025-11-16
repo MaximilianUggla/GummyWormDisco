@@ -4,11 +4,15 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Queue;
 
 public class DanceSimulator {
     private int width, height;
@@ -36,9 +40,9 @@ public class DanceSimulator {
 
         for (int i = 0; i <= beats.getLast(); i++) {
             if (i != nextStop) {
-                List<Worm> colisionOrder = getColisionOrder();
+                Worm firstToColide = firstToColide();
 
-                if (colisionOrder.isEmpty()) {
+                if (firstToColide == null) {
                     Worm wormNotOnBoard = wormNotOnBoard();
 
                     if (wormNotOnBoard != null) {
@@ -46,7 +50,7 @@ public class DanceSimulator {
 
                     } else {appendOutput("x");}
 
-                } else {turn(colisionOrder.getFirst());}
+                } else {turn(firstToColide);}
                 
             } else {
                 if (spotlights.hasNext()) {
@@ -59,18 +63,17 @@ public class DanceSimulator {
         } catch (IOException e) {e.printStackTrace();}
     }
 
-    private List<Worm> getColisionOrder() {
+    private Worm firstToColide() {
         busy = getBusy();
-        List<Worm> colisionOrder = new ArrayList<>(Arrays.asList(new Worm[worms.length]));
+        Queue<Pair<Worm, Integer>> colisionOrder = new PriorityQueue<>((p1, p2) -> p2._2() - p1._2());
 
         for (Worm w : worms) {
             Pair<Boolean, Integer> colision = getColision(w, w.currentDirection());
-            if (colision.getFirst()) {
-                colisionOrder.add(colision.getSecound(), w);
+            if (colision._1()) {
+                colisionOrder.offer(new Pair<Worm,Integer>(w, colision._2()));
             }
         }
-        colisionOrder.removeIf(w -> w == null);
-        return colisionOrder;
+        return colisionOrder.poll()._1();
     }    
     
     private Pair<Boolean, Integer> getColision(Worm w, Coordinate direction) {
