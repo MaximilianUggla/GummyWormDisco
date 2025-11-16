@@ -180,20 +180,28 @@ public class DanceSimulator {
         if (head.x() < 0) {
             if (!(head.x() < nextHead.x())) {
                 turn(w);  
-            } else {appendOutput("x");}
+            } else {stepAndAppend(w);}
+
         } else if (head.y() < 0) {
             if (!(head.y() < nextHead.y())) {
                 turn(w);
-            } else {appendOutput("x");}
+            } else {stepAndAppend(w);}
+
         } else if (head.x() > width-1) {
             if (!(head.x() > nextHead.x())) {
                 turn(w);
-            } else {appendOutput("x");}
+            } else {stepAndAppend(w);}
+
         } else {
             if (!(head.y() > nextHead.y())) {
                 turn(w);
-            } else {appendOutput("x");}
+            } else {stepAndAppend(w);}
         }
+    }
+
+    private void stepAndAppend(Worm w) {
+        w.shiftCoordinates(w.currentDirection());
+        appendOutput("x");
     }
 
     private void appendOutput(String str) {
