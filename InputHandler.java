@@ -22,7 +22,7 @@ B R R B B
 */    
 
     public static void main(String[] args) throws IOException {
-        int height, nbrOfWorms;
+        int height, width, nbrOfWorms;
 
         // System.out.println("--- --- --- --- --- --- --- --- --- --- --- --- --- ---");
         // System.out.println("Either paste all input lines at once or one at a time,\nthen on the final line press enter twice to run the program:");
@@ -40,7 +40,8 @@ B R R B B
             information.add(line.split(" "));
         }
 
-        String[] widthAndHeight = information.get(0);           
+        String[] widthAndHeight = information.get(0);  
+        width = Integer.parseInt(widthAndHeight[0]);         
         height = Integer.parseInt(widthAndHeight[1]);
 
 
@@ -64,7 +65,7 @@ B R R B B
             worms[i-height-3] = new Worm(information.get(i), i-height-3);
         }
 
-        DanceSimulator ds = new DanceSimulator(board, worms, beats);
-        ds.startSim();
+        DanceSimulator ds = new DanceSimulator(board, width, height, worms, beats);
+        ds.simulation();
     }
 }
