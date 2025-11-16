@@ -60,6 +60,13 @@ public class Worm {
     }
 
     @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Worm w) {
+            return Arrays.equals(wormSegments, w.wormSegments);
+        } else {return false;}
+    }
+
+    @Override
     public String toString() {
         String str = "";
         for (Coordinate cordinate : wormSegments) {
