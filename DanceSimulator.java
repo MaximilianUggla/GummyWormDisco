@@ -25,9 +25,6 @@ public class DanceSimulator {
 
         for (int i = 0; i <= beats.getLast(); i++) {
             if (i != nextStop) {
-                if (getBusy().size() < worms.length*6) {
-                    System.out.println("Colision");
-                }
                 List<Worm> colisionOrder = getColisionOrder();
 
                 if (colisionOrder.isEmpty()) {
