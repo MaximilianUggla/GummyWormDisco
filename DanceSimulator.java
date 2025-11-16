@@ -31,25 +31,30 @@ public class DanceSimulator {
     public void simulation() {
         Iterator<Integer> spotlights = beats.iterator();
         Integer nextStop = spotlights.next();
+        Worm turned = null;
 
         for (int i = 0; i <= beats.getLast(); i++) {
+            System.out.println(i);
+            turned = null;
             if (i != nextStop) {
-                Worm turned = null;
                 Worm firstToColide = firstToColide();
 
                 if (firstToColide == null) {
                     Worm wormNotOnBoard = wormNotOnBoard();
 
                     if (wormNotOnBoard != null) {
-                        turnWormToBoard(wormNotOnBoard);
                         turned = wormNotOnBoard;
-                    } else {appendOutput("x");}
+                        turnWormToBoard(wormNotOnBoard);
+                    } else {
+                        appendOutput("x");
+                    }
 
                 } else {
-                    turn(firstToColide);
                     turned = firstToColide;
+                    turn(firstToColide);
                 }
 
+                System.out.println(turned);
                 for (Worm w : worms) {
                     if (w != turned) {
                         w.shiftCoordinates(w.currentDirection());
@@ -72,11 +77,14 @@ public class DanceSimulator {
         Queue<Pair<Worm, Integer>> colisionOrder = new PriorityQueue<>((p1, p2) -> p1._2() - p2._2());
 
         for (Worm w : worms) {
+            System.out.println(w);
             Pair<Boolean, Integer> colision = getColision(w, w.currentDirection());
+            System.out.println(colision);
             if (colision._1()) {
                 colisionOrder.offer(new Pair<Worm,Integer>(w, colision._2()));
             }
         }
+        System.out.println(colisionOrder);
         Pair<Worm, Integer> first = colisionOrder.poll();
         if (first != null) {
             return first._1();
@@ -155,28 +163,36 @@ public class DanceSimulator {
     }
 
     private Worm wormNotOnBoard() {
-        Worm w = null;
-        for (int i = 0; i < worms.length; i++) {
-            Coordinate head = worms[i].head();
-            if (head.x() < 0 || head.y() < 0 || head.x() > width-1 || head.y() > height-1) {
-                w = worms[i];
+        Worm worm = null;
+        for (Worm w : worms) {
+            Coordinate h = w.head();
+            if (h.x() < 0 || h.y() < 0 || h.x() > width-1 || h.y() > height-1) {
+                worm = w;
             }
         }
-        return w;
+        return worm;
     }
 
     private void turnWormToBoard(Worm w) {
         Coordinate head = w.head();
         Coordinate currDir = w.currentDirection();
         Coordinate nextHead = head.add(currDir);
-        if (head.x() < 0 || head.y() < 0) {
-            if (!(nextHead.x() > head.x() || nextHead.y() > head.y())) {
-                turnAndAppend(w, leftTurnDirection(currDir), "l");
-            }
+        if (head.x() < 0) {
+            if (!(head.x() < nextHead.x())) {
+                turn(w);  
+            } else {appendOutput("x");}
+        } else if (head.y() < 0) {
+            if (!(head.y() < nextHead.y())) {
+                turn(w);
+            } else {appendOutput("x");}
+        } else if (head.x() > width-1) {
+            if (!(head.x() > nextHead.x())) {
+                turn(w);
+            } else {appendOutput("x");}
         } else {
-            if (!(nextHead.x() < head.x() || nextHead.y() < head.y())) {
-                turnAndAppend(w, leftTurnDirection(currDir), "l");
-            }
+            if (!(head.y() > nextHead.y())) {
+                turn(w);
+            } else {appendOutput("x");}
         }
     }
 
