@@ -1,6 +1,7 @@
 package GummyWormDisco;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -26,13 +27,25 @@ public class DanceSimulator {
 
         for (int i = 0; i <= beats.getLast(); i++) {
             if (i != nextStop) {
+                if (getBusy().size() < worms.length*6) {
+                    System.out.println("Colision");
+                }
                 List<Worm> colisionOrder = getColisionOrder();
+
                 if (colisionOrder.isEmpty()) {
-                    turnAWorm();
+                    Worm wormNotOnBoard = wormNotOnBoard();
+
+                    if (wormNotOnBoard != null) {
+                        turnWormToBoard(wormNotOnBoard);
+
+                    } else {System.out.println("x");}
+
                 } else {turn(colisionOrder.getFirst());}
                 
             } else {
-                nextStop = spotlights.next();
+                if (spotlights.hasNext()) {
+                    nextStop = spotlights.next();
+                }
                 System.out.println("x");
             }
         }
@@ -40,13 +53,15 @@ public class DanceSimulator {
 
     private List<Worm> getColisionOrder() {
         busy = getBusy();
-        List<Worm> colisionOrder = new ArrayList<>();
+        List<Worm> colisionOrder = new ArrayList<>(Arrays.asList(new Worm[worms.length]));
+
         for (Worm w : worms) {
             Pair<Boolean, Integer> colision = getColision(w, w.currentDirection());
             if (colision.getFirst()) {
                 colisionOrder.add(colision.getSecound(), w);
             }
         }
+        colisionOrder.removeIf(w -> w == null);
         return colisionOrder;
     }    
     
@@ -72,30 +87,50 @@ public class DanceSimulator {
     private void turn(Worm w) {
         Pair<Boolean, Integer> leftTurn = getColision(w, new Coordinate(-1, 0));
         Pair<Boolean, Integer> rightTurn = getColision(w, new Coordinate(1, 0));
+
         if (leftTurn.getFirst() && rightTurn.getFirst()) {
             if (leftTurn.getSecound() > rightTurn.getSecound()) {
-                w.move("left");
-            } else {w.move("right");}
+                moveAndPrint(w, "left");
+            } else {moveAndPrint(w, "right");}
+
         } else if (leftTurn.getFirst()) {
+            moveAndPrint(w, "right");
+
+        } else {moveAndPrint(w, "left");}
+    }
+
+    private void moveAndPrint(Worm w, String dir) {
+        if (dir.equals("left")) {
+            w.move("left");
+            System.out.println(w.id() + " " + "l");
+        } else if (dir.equals("right")) {
             w.move("right");
-        } else {w.move("left");}
-
+            System.out.println(w.id() + " " + "r");
+        }
     }
 
-    private void turnAWorm() {
-        Worm outOfBounds = outOfBounds();
-        if (outOfBounds != null) {
-            turn(outOfBounds);
-        } else {goToBlue();}
+    private Worm wormNotOnBoard() {
+        Worm w = null;
+        for (int i = 0; i < worms.length; i++) {
+            Coordinate head = worms[i].head();
+            if (head.x() < 0 || head.y() < 0 || head.x() > width-1 || head.y() > height-1) {
+                w = worms[i];
+            }
+        }
+        return w;
     }
 
-    private void goToBlue() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'goToBlue'");
-    }
-
-    private Worm outOfBounds() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'outOfBounds'");
+    private void turnWormToBoard(Worm w) {
+        Coordinate head = w.head();
+        Coordinate nextHead = head.add(w.currentDirection());
+        if (head.x() < 0 || head.y() < 0) {
+            if (!(nextHead.x() > head.x() || nextHead.y() > head.y())) {
+                moveAndPrint(w, "left");
+            }
+        } else {
+            if (!(nextHead.x() < head.x() || nextHead.y() < head.y())) {
+                moveAndPrint(w, "left");
+            }
+        }
     }
 }

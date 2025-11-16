@@ -60,9 +60,9 @@ B R R B B
             board[i-3] = information.get(i);
         }
 
-        Worm[] worms = new Worm[nbrOfWorms];                            
-        for (int i = height+3; i < nbrOfWorms+height+3; i++) {
-            worms[i-height-3] = new Worm(information.get(i), i-height-3);
+        Worm[] worms = new Worm[nbrOfWorms];
+        for (int i = 0; i < nbrOfWorms; i++) {
+            worms[i] = new Worm(information.get(i+height+3), i);
         }
 
         DanceSimulator ds = new DanceSimulator(board, width, height, worms, beats);
