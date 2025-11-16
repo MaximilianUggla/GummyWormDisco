@@ -1,14 +1,9 @@
 package GummyWormDisco;
 
-public class Coordinate implements Comparable<Coordinate> {
+public class Coordinate {
     private int x, y;
 
     public Coordinate(int x, int y) {
-        this.x = x;
-        this.y = y;
-    }
-
-    public void update(int x, int y) {
         this.x = x;
         this.y = y;
     }
@@ -24,7 +19,7 @@ public class Coordinate implements Comparable<Coordinate> {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof Coordinate other) {
-            return x() == other.x() && y() == other.y();
+            return x == other.x && y == other.y;
 
         } else {return false;}
     }
@@ -36,14 +31,6 @@ public class Coordinate implements Comparable<Coordinate> {
     @Override
     public String toString() {
         return x + "," + y;
-    }
-
-    @Override
-    public int compareTo(Coordinate other) {
-        int comparisionX = x() - other.x();
-        if (comparisionX == 0) {
-            return y() - other.y();
-        } else {return comparisionX;}
     }
 
 }
