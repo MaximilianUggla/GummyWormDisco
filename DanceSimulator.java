@@ -1,5 +1,9 @@
 package GummyWormDisco;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -11,15 +15,22 @@ public class DanceSimulator {
     private Worm[] worms;
     private List<Integer> beats;
     private HashSet<Coordinate> busy;
+    private BufferedWriter writer;
+    private File file = new File("output.txt");
     
     public DanceSimulator(int width, int height, Worm[] worms, List<Integer> beats) {
         this.width = width;
         this.height = height;
         this.worms = worms;
         this.beats = beats;
+
+        try {writer = new BufferedWriter(new FileWriter(file.getName(), true));
+        } catch (IOException e) {e.printStackTrace();}
     }
 
     public void simulation() {
+        file.delete();
+
         Iterator<Integer> spotlights = beats.iterator();
         Integer nextStop = spotlights.next();
 
@@ -33,7 +44,7 @@ public class DanceSimulator {
                     if (wormNotOnBoard != null) {
                         turnWormToBoard(wormNotOnBoard);
 
-                    } else {System.out.println("x");}
+                    } else {appendOutput("x");}
 
                 } else {turn(colisionOrder.getFirst());}
                 
@@ -41,9 +52,11 @@ public class DanceSimulator {
                 if (spotlights.hasNext()) {
                     nextStop = spotlights.next();
                 }
-                System.out.println("x");
+                appendOutput("x");
             }
         }
+        try {writer.close();
+        } catch (IOException e) {e.printStackTrace();}
     }
 
     private List<Worm> getColisionOrder() {
@@ -85,22 +98,22 @@ public class DanceSimulator {
 
         if (leftTurn.getFirst() && rightTurn.getFirst()) {
             if (leftTurn.getSecound() > rightTurn.getSecound()) {
-                moveAndPrint(w, "left");
-            } else {moveAndPrint(w, "right");}
+                moveAndAppend(w, "left");
+            } else {moveAndAppend(w, "right");}
 
         } else if (leftTurn.getFirst()) {
-            moveAndPrint(w, "right");
+            moveAndAppend(w, "right");
 
-        } else {moveAndPrint(w, "left");}
+        } else {moveAndAppend(w, "left");}
     }
 
-    private void moveAndPrint(Worm w, String dir) {
+    private void moveAndAppend(Worm w, String dir) {
         if (dir.equals("left")) {
             w.move("left");
-            System.out.println(w.id() + " " + "l");
+            appendOutput(w.id() + " " + "l");
         } else if (dir.equals("right")) {
             w.move("right");
-            System.out.println(w.id() + " " + "r");
+            appendOutput(w.id() + " " + "r");
         }
     }
 
@@ -120,12 +133,19 @@ public class DanceSimulator {
         Coordinate nextHead = head.add(w.currentDirection());
         if (head.x() < 0 || head.y() < 0) {
             if (!(nextHead.x() > head.x() || nextHead.y() > head.y())) {
-                moveAndPrint(w, "left");
+                moveAndAppend(w, "left");
             }
         } else {
             if (!(nextHead.x() < head.x() || nextHead.y() < head.y())) {
-                moveAndPrint(w, "left");
+                moveAndAppend(w, "left");
             }
         }
+    }
+
+    private void appendOutput(String str) {
+        try {
+            writer.append(str);
+            writer.append("\n");
+        } catch (IOException e) {e.printStackTrace();}
     }
 }
