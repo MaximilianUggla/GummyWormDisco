@@ -29,7 +29,6 @@ public class DanceSimulator {
     }
 
     public void simulation() {
-        file.delete();
         Iterator<Integer> spotlights = beats.iterator();
         Integer nextStop = spotlights.next();
 
@@ -44,7 +43,6 @@ public class DanceSimulator {
                     if (wormNotOnBoard != null) {
                         turnWormToBoard(wormNotOnBoard);
                         turned = wormNotOnBoard;
-
                     } else {appendOutput("x");}
 
                 } else {
@@ -56,7 +54,6 @@ public class DanceSimulator {
                     if (w != turned) {
                         w.shiftCoordinates(w.currentDirection());
                     }
-                    System.out.println(w);
                 }
                 
             } else {
@@ -72,7 +69,7 @@ public class DanceSimulator {
 
     private Worm firstToColide() {
         busy = getBusy();
-        Queue<Pair<Worm, Integer>> colisionOrder = new PriorityQueue<>((p1, p2) -> p2._2() - p1._2());
+        Queue<Pair<Worm, Integer>> colisionOrder = new PriorityQueue<>((p1, p2) -> p1._2() - p2._2());
 
         for (Worm w : worms) {
             Pair<Boolean, Integer> colision = getColision(w, w.currentDirection());
@@ -81,7 +78,6 @@ public class DanceSimulator {
             }
         }
         Pair<Worm, Integer> first = colisionOrder.poll();
-        System.out.println(colisionOrder);
         if (first != null) {
             return first._1();
         } else {return null;}
@@ -144,11 +140,11 @@ public class DanceSimulator {
         Coordinate topToDown = new Coordinate(0, 1);
         Coordinate downTotop = new Coordinate(0, -1);
 
-        if (currDir == leftToRight) {
+        if (currDir.equals(leftToRight)) {
             return downTotop;
-        } else if (currDir == rightToLeft) {
+        } else if (currDir.equals(rightToLeft)) {
             return topToDown;
-        } else if (currDir == topToDown) {
+        } else if (currDir.equals(topToDown)) {
             return leftToRight;
         } else {return rightToLeft;}
     }
