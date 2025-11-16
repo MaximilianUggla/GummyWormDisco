@@ -7,14 +7,12 @@ import java.util.Iterator;
 import java.util.List;
 
 public class DanceSimulator {
-    private String[][] board;
     private int width, height;
     private Worm[] worms;
     private List<Integer> beats;
     private HashSet<Coordinate> busy;
     
-    public DanceSimulator(String[][] board, int width, int height, Worm[] worms, List<Integer> beats) {
-        this.board = board;
+    public DanceSimulator(int width, int height, Worm[] worms, List<Integer> beats) {
         this.width = width;
         this.height = height;
         this.worms = worms;
