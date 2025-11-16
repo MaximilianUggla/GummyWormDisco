@@ -4,10 +4,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -34,12 +30,12 @@ public class DanceSimulator {
 
     public void simulation() {
         file.delete();
-
         Iterator<Integer> spotlights = beats.iterator();
         Integer nextStop = spotlights.next();
 
         for (int i = 0; i <= beats.getLast(); i++) {
             if (i != nextStop) {
+                Worm turned = null;
                 Worm firstToColide = firstToColide();
 
                 if (firstToColide == null) {
@@ -47,10 +43,21 @@ public class DanceSimulator {
 
                     if (wormNotOnBoard != null) {
                         turnWormToBoard(wormNotOnBoard);
+                        turned = wormNotOnBoard;
 
                     } else {appendOutput("x");}
 
-                } else {turn(firstToColide);}
+                } else {
+                    turn(firstToColide);
+                    turned = firstToColide;
+                }
+
+                for (Worm w : worms) {
+                    if (w != turned) {
+                        w.shiftCoordinates(w.currentDirection());
+                    }
+                    System.out.println(w);
+                }
                 
             } else {
                 if (spotlights.hasNext()) {
@@ -73,7 +80,11 @@ public class DanceSimulator {
                 colisionOrder.offer(new Pair<Worm,Integer>(w, colision._2()));
             }
         }
-        return colisionOrder.poll()._1();
+        Pair<Worm, Integer> first = colisionOrder.poll();
+        System.out.println(colisionOrder);
+        if (first != null) {
+            return first._1();
+        } else {return null;}
     }    
     
     private Pair<Boolean, Integer> getColision(Worm w, Coordinate direction) {
@@ -96,28 +107,55 @@ public class DanceSimulator {
     }
 
     private void turn(Worm w) {
-        Pair<Boolean, Integer> leftTurn = getColision(w, new Coordinate(-1, 0));
-        Pair<Boolean, Integer> rightTurn = getColision(w, new Coordinate(1, 0));
+        Coordinate leftDirection = leftTurnDirection(w.currentDirection());
+        Coordinate rightDirection = rightTurnDirection(w.currentDirection());
+        Pair<Boolean, Integer> leftTurn = getColision(w, leftDirection);
+        Pair<Boolean, Integer> rightTurn = getColision(w, rightDirection);
 
-        if (leftTurn.getFirst() && rightTurn.getFirst()) {
-            if (leftTurn.getSecound() > rightTurn.getSecound()) {
-                moveAndAppend(w, "left");
-            } else {moveAndAppend(w, "right");}
+        if (leftTurn._1() && rightTurn._1()) {
+            if (leftTurn._2() < rightTurn._2()) {
+                turnAndAppend(w, leftDirection, "l");
+            } else {turnAndAppend(w, rightDirection, "r");}
 
-        } else if (leftTurn.getFirst()) {
-            moveAndAppend(w, "right");
+        } else if (leftTurn._1()) {
+            turnAndAppend(w, rightDirection, "r");
 
-        } else {moveAndAppend(w, "left");}
+        } else {turnAndAppend(w, leftDirection, "l");}
     }
 
-    private void moveAndAppend(Worm w, String dir) {
-        if (dir.equals("left")) {
-            w.move("left");
-            appendOutput(w.id() + " " + "l");
-        } else if (dir.equals("right")) {
-            w.move("right");
-            appendOutput(w.id() + " " + "r");
-        }
+    private Coordinate rightTurnDirection(Coordinate currDir) {
+        Coordinate leftToRight = new Coordinate(1, 0);
+        Coordinate rightToLeft = new Coordinate(-1, 0);
+        Coordinate topToDown = new Coordinate(0, 1);
+        Coordinate downTotop = new Coordinate(0, -1);
+
+        if (currDir == leftToRight) {
+            return topToDown;
+        } else if (currDir == rightToLeft) {
+            return downTotop;
+        } else if (currDir == topToDown) {
+            return rightToLeft;
+        } else {return leftToRight;}
+    }
+
+    private Coordinate leftTurnDirection(Coordinate currDir) {        
+        Coordinate leftToRight = new Coordinate(1, 0);
+        Coordinate rightToLeft = new Coordinate(-1, 0);
+        Coordinate topToDown = new Coordinate(0, 1);
+        Coordinate downTotop = new Coordinate(0, -1);
+
+        if (currDir == leftToRight) {
+            return downTotop;
+        } else if (currDir == rightToLeft) {
+            return topToDown;
+        } else if (currDir == topToDown) {
+            return leftToRight;
+        } else {return rightToLeft;}
+    }
+
+    private void turnAndAppend(Worm w, Coordinate dir, String turn) {
+        w.shiftCoordinates(dir);
+        appendOutput(w.id() + " " + turn);
     }
 
     private Worm wormNotOnBoard() {
@@ -133,14 +171,15 @@ public class DanceSimulator {
 
     private void turnWormToBoard(Worm w) {
         Coordinate head = w.head();
-        Coordinate nextHead = head.add(w.currentDirection());
+        Coordinate currDir = w.currentDirection();
+        Coordinate nextHead = head.add(currDir);
         if (head.x() < 0 || head.y() < 0) {
             if (!(nextHead.x() > head.x() || nextHead.y() > head.y())) {
-                moveAndAppend(w, "left");
+                turnAndAppend(w, leftTurnDirection(currDir), "l");
             }
         } else {
             if (!(nextHead.x() < head.x() || nextHead.y() < head.y())) {
-                moveAndAppend(w, "left");
+                turnAndAppend(w, leftTurnDirection(currDir), "l");
             }
         }
     }

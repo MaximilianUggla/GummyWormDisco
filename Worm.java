@@ -37,19 +37,7 @@ public class Worm {
         return new Coordinate(newX, newY);
     }
 
-    public void move(String direction) {
-        switch(direction.toLowerCase()) {
-            case "left":
-                shiftCoordinates(new Coordinate(-1, 0));
-            case "right":
-                shiftCoordinates(new Coordinate(1, 0));
-            default:
-                Coordinate currdir = currentDirection();  
-                shiftCoordinates(new Coordinate(currdir.x(), currdir.y()));
-        }
-    }
-
-    private void shiftCoordinates(Coordinate dir) {
+    public void shiftCoordinates(Coordinate dir) {
         Coordinate toShift = head().add(dir);
 
         for (int i = 0; i < wormSegments.length; i++) {
