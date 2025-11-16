@@ -19,6 +19,10 @@ public class Worm {
         id = i;
     }
 
+    public int id() {
+        return id;
+    }
+
     public Coordinate head() {
         return wormSegments[0];
     }
@@ -33,18 +37,15 @@ public class Worm {
         return new Coordinate(newX, newY);
     }
 
-    public String move(String direction) {
+    public void move(String direction) {
         switch(direction.toLowerCase()) {
             case "left":
                 shiftCoordinates(new Coordinate(-1, 0));
-                return id + "l";
             case "right":
                 shiftCoordinates(new Coordinate(1, 0));
-                return id + "r";
             default:
                 Coordinate currdir = currentDirection();  
                 shiftCoordinates(new Coordinate(currdir.x(), currdir.y()));
-                return "x";
         }
     }
 
