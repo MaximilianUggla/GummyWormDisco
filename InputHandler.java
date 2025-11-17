@@ -1,10 +1,9 @@
 package GummyWormDisco;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 public class InputHandler {
 
@@ -26,34 +25,31 @@ B R R B B
 
         List<String[]> information = new ArrayList<>();
 
-        BufferedReader read = new BufferedReader(new InputStreamReader(System.in));
-
-        while (true) {
-            String line = read.readLine();
-            if (line.isBlank()) {
-                break;
-            }
-            information.add(line.split(" "));
-        }
-
-        String[] widthAndHeight = information.get(0);  
+        Scanner sc = new Scanner(System.in);
+        
+        String[] widthAndHeight = sc.nextLine().split(" ");
         width = Integer.parseInt(widthAndHeight[0]);         
         height = Integer.parseInt(widthAndHeight[1]);
 
-
         List<Integer> beats = new ArrayList<>();
-        String[] spotlightsAndbeats = information.get(1);
+        String[] spotlightsAndbeats = sc.nextLine().split(" ");
         for (String str : spotlightsAndbeats) {
             beats.add(Integer.parseInt(str));
         }
         beats.removeFirst();
 
+        nbrOfWorms = Integer.parseInt(sc.nextLine());           
 
-        nbrOfWorms = Integer.parseInt(information.get(2)[0]);           
+        for (int i = 0; i < height+nbrOfWorms; i++) {
+            String line = sc.nextLine();
+            information.add(line.split(" "));
+        }
+        sc.close();
+
 
         Worm[] worms = new Worm[nbrOfWorms];
         for (int i = 0; i < nbrOfWorms; i++) {
-            worms[i] = new Worm(information.get(i+height+3), i);
+            worms[i] = new Worm(information.get(i+height), i);
         }
 
         DanceSimulator ds = new DanceSimulator(width, height, worms, beats);

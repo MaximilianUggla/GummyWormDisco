@@ -200,9 +200,6 @@ public class DanceSimulator {
     }
 
     private void appendOutput(String str) {
-        try {
-            writer.append(str);
-            writer.append("\n");
-        } catch (IOException e) {e.printStackTrace();}
+            System.out.print(str + "\n");
     }
 }
